@@ -3,15 +3,20 @@ import random
 
 from typing import Dict, List
 
-from fastapi import FastAPI, Request, WebSocket
+from fastapi import *
 from fastapi.encoders import jsonable_encoder
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
-
+import os
+import youtube_dl
+import requests
+import json
 from app.models import Room
 
 app = FastAPI()
+# VIDEO_DOWNLOAD_PATH = './yt_temp/'  # 다운로드 경로
+VIDEO_DOWNLOAD_PATH = './static/music_files'  # 다운로드 경로
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
@@ -78,3 +83,83 @@ async def chat_room(code: str, websocket: WebSocket):
         while True:
             data = await websocket.receive_text()
             await room.broadcast(f"{data}")
+
+
+
+@app.get("/search/{query}")
+async def search(query: str):
+    URL = f"https://www.googleapis.com/youtube/v3/search?q={query}&key=AIzaSyDlCe_en2fQZrQXEyV2hmDue9396qzaGrw"
+    response = requests.get(URL)
+    response.status_code
+    # print(response.text)
+    # print(type(response.text))
+    re = response.json()
+    print(re['items'][0]['id']['videoId'])
+    item = re['items'][0]['id']['videoId']
+    # print(re)
+    download_mp3(VIDEO_DOWNLOAD_PATH, item)
+    # return response.text
+
+    return f"http://127.0.0.1:8000/static/music_files/{item}.mp3"
+
+
+@app.get("/yt/{code}")
+async def dl(code: str):
+    downloads_mp3(VIDEO_DOWNLOAD_PATH, ['https://www.youtube.com/watch?v=' + code])
+    print('Complete download!')
+
+        
+    return {"message": code}
+
+
+def download_mp3(output_dir, youtube_video_code):
+
+    download_path = os.path.join(output_dir, '%(id)s.%(ext)s')
+
+    video_url = 'https://www.youtube.com/watch?v=' + youtube_video_code
+
+    # youtube_dl options
+    ydl_opts = {
+        'format': 'bestaudio/best',  # 가장 좋은 화질로 선택(화질을 선택하여 다운로드 가능)
+        'outtmpl': download_path, # 다운로드 경로 설정
+        'postprocessors': [{
+        'key': 'FFmpegExtractAudio',
+        'preferredcodec': 'mp3',
+        'preferredquality': '192',
+        }]
+    }
+
+    try:
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([video_url])
+    except Exception as e:
+        print('error', e)
+
+
+def downloads_mp3(output_dir, youtube_video_list):
+
+    download_path = os.path.join(output_dir, '%(id)s-%(title)s.%(ext)s')
+
+
+    for video_url in youtube_video_list:
+
+        # youtube_dl options
+        ydl_opts = {
+            'format': 'bestaudio/best',  # 가장 좋은 화질로 선택(화질을 선택하여 다운로드 가능)
+            'outtmpl': download_path, # 다운로드 경로 설정
+            # 'writesubtitles': 'best', # 자막 다운로드(자막이 없는 경우 다운로드 X)
+            # 'writethumbnail': 'best',  # 영상 thumbnail 다운로드
+            # 'writeautomaticsub': True, # 자동 생성된 자막 다운로드
+            # 'subtitleslangs': 'en',  # 자막 언어가 영어인 경우(다른 언어로 변경 가능)
+            'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+            }]
+        }
+
+        try:
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                ydl.download([video_url])
+        except Exception as e:
+            print('error', e)
