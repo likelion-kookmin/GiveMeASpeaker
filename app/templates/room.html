@@ -8,7 +8,6 @@
     let now = 0;
     var nickname = localStorage.getItem("nickname");
     var ws = new WebSocket(`ws://localhost:8000/chat/{{code}}/`);
-    
 
     window.onload = async function () {
         let playlist = await fetch("/room/{{code}}/playlist").then((res) => res.json())
@@ -60,6 +59,8 @@
         const keyword = document.getElementById("searchText").value
         const roomNumber = window.location.pathname.substring(6, 12)
         fetch(window.location.origin + '/search/' + roomNumber + '/' + keyword)
+
+        ws.send(`${nickname} 님이 ${keyword} 을 신청하셨습니다!`)
     }
 </script>
 
