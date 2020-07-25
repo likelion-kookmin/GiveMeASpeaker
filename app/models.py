@@ -33,8 +33,11 @@ class Notifier:
         while len(self.connections) > 0:
             print(self.connections)
             ws = self.connections.pop()
-            await ws.send_text(msg)
-            alive_sockets.append(ws)
+            try:
+                await ws.send_text(msg)
+                alive_sockets.append(ws)
+            except RuntimeError:
+                continue
         self.connections = alive_sockets
 
 
