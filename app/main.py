@@ -1,7 +1,7 @@
 import json
 import os
 import random
-import requests
+import requests as req
 import youtube_dl
 
 from typing import Dict, List
@@ -92,7 +92,7 @@ async def chat_room(code: str, websocket: WebSocket):
 @app.get("/search/{query}")
 async def search(query: str):
     URL = f"https://www.googleapis.com/youtube/v3/search?q={query}&key=AIzaSyDlCe_en2fQZrQXEyV2hmDue9396qzaGrw"
-    re = requests.get(URL).json()
+    re = req.get(URL).json()
     item = re['items'][0]['id']['videoId']
     download_mp3(VIDEO_DOWNLOAD_PATH, item)
 
