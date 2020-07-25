@@ -1,5 +1,8 @@
+import json
 import os
 import random
+import requests
+import youtube_dl
 
 from typing import Dict, List
 
@@ -8,10 +11,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
-import os
-import youtube_dl
-import requests
-import json
+
 from app.models import Room
 
 app = FastAPI()
@@ -30,17 +30,6 @@ async def homepage(request: Request):
 
 
 room_dict: Dict[str, Room] = {}
-
-
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    await notifier.connect(websocket)
-    try:
-        while True:
-            data = await websocket.receive_text()
-            await websocket.send_text(f"Message text was: {data}")
-    except WebSocketDisconnect:
-        notifier.remove(websocket)
 
 
 def create_random_room_code():
@@ -95,7 +84,6 @@ async def search(query: str):
 
 
 def download_mp3(output_dir, youtube_video_code):
-
     download_path = os.path.join(output_dir, '%(id)s.%(ext)s')
     video_url = 'https://www.youtube.com/watch?v=' + youtube_video_code
 
