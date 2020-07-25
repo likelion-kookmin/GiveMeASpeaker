@@ -1,55 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
-    <title>Document</title>
-    <style>
-        @font-face {
-            font-family: 'TmoneyRoundWindExtraBold';
-            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/TmoneyRoundWindExtraBold.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        * {
-            font-family: "TmoneyRoundWindExtraBold";
-        }
-
-        .title {
-            font-size: 5rem;
-        }
-
-        .subtitle {
-            font-size: 1.5rem;
-        }
-
-        .subsubtitle {
-            margin-top: -1.25rem;
-            margin-bottom: 1.5rem;
-        }
-    </style>
-
-</head>
-
-<body>
-    <section class="hero is-primary is-fullheight">
-        <div class="hero-body">
+{% extends "base.html" %}
+{% block content %}
+<section class="hero is-primary is-fullheight">
+    <div class="hero-body">
             <div class="container has-text-centered">
                 <h1 class="title">스피커 좀 빌려줘!</h1>
                 <h2 class="subtitle">자동으로 추가되는 재생목록!</h2>
                 <h3 class="subsubtitle">친구야.. 넌 운전만 해 :D</h3>
 
                 <div class="columns is-centered">
-                    <div class="column is-5">
+                    <div class="column is-3">
                         <div class="field">
                             <div class="control">
                                 <input id="nickname" class="input is-primary" type="text" placeholder="이름을 입력해주세요!">
                             </div>
                         </div>
-                        <button id="enter_btn" type="submit" class="button is-primary is-light">입장하기</button>
+                        <button id="enter_btn" type="submit" class="button is-primary is-light is-medium">입장하기</button>
                     </div>
                 </div>
             </div>
@@ -91,6 +56,4 @@
         }
 
     </script>
-</body>
-
-</html>
+{% endblock %}
