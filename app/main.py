@@ -105,7 +105,7 @@ async def chat_room(code: str, websocket: WebSocket):
 
 @app.get("/search/{code}/{query}")
 async def search(code: str, query: str):
-    URL = f"https://www.googleapis.com/youtube/v3/search?q={query}&key=AIzaSyDlCe_en2fQZrQXEyV2hmDue9396qzaGrw"
+    URL = f"https://www.googleapis.com/youtube/v3/search?q={query}&key=AIzaSyDfUEAuvoAJxJ4heQ2mhAohRyPx5PIzgIE"
     re = req.get(URL).json()
     
     i = 0

@@ -27,8 +27,11 @@
         let playlist = await fetch("/room/{{code}}/playlist").then((res) => res.json())
         if (playlist.length) {
             clearInterval(timerId);
-            newMusic();
-            now = 0;
+            // newMusic();
+            now = 1;
+            // console.log(now);
+            let playlist = await fetch("/room/{{code}}/playlist").then((res) => res.json())
+            document.getElementById("player").src = `/static/music_files/${playlist[0]}.mp3`;
         }
     };
 
