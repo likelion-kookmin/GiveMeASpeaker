@@ -36,7 +36,6 @@
                 event.preventDefault()
                 const keyword = document.getElementById("searchText")
                 const roomNumber = window.location.pathname.substring(6,12)
-                console.log(window.location.origin + '/search/' + roomNumber + '/' + keyword)
                 fetch(window.location.origin + '/search/' + roomNumber + '/' + keyword)
             }
             function newMusic() {
