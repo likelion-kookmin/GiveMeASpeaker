@@ -36,12 +36,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/")
 async def homepage(request: Request):
     template = "index.html"
-    context = {"request": request,
-               "rooms": {room.room_code: str(room) for room in room_dict.values()}
-               }
+    context = {"request": request}
+    return templates.TemplateResponse(template, context)
+
+
+@app.get("/waiting-room")
+async def homepage(request: Request):
+    template = "waiting_room.html"
+    context = {
+        "request": request,
+        "rooms": {room.room_code: str(room) for room in room_dict.values()}
+    }
     return templates.TemplateResponse(template, context)
 
 

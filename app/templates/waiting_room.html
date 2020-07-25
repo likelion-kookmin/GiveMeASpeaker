@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1></h1>
+    <form method="POST" onsubmit="createRoom()">
+        <button>만들기</button>
+    </form>
+    {% for code, info in rooms.items() %}
+    <a href="/room/{{code}}">{{code}} : {{info}}</a> <br>
+    {% endfor%}
+
+    <script>
+        function createRoom() {
+            event.preventDefault();
+            fetch("/room/", {method:"POST"});
+            window.location.reload();
+        }
+    </script>
+</body>
+
+</html>
