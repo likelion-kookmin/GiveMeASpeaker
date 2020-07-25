@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
-    <form method="POST" action="/room/"> 
+    <form method="POST" onsubmit="createRoom()">
         <button>만들기</button>
     </form>
     {% for code, info in rooms.items() %}
     <a href="/room/{{code}}">{{code}} : {{info}}</a> <br>
     {% endfor%}
+
+    <script>
+
+        function createRoom() {
+            event.preventDefault()
+            fetch("/room/", {method:"POST"})
+        }
+    </script>
 </body>
+
 </html>

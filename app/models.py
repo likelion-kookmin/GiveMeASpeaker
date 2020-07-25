@@ -31,6 +31,7 @@ class Notifier:
     async def _notify(self, msg: str):
         alive_sockets = []
         while len(self.connections) > 0:
+            print(self.connections)
             ws = self.connections.pop()
             await ws.send_text(msg)
             alive_sockets.append(ws)
