@@ -107,7 +107,15 @@ async def chat_room(code: str, websocket: WebSocket):
 async def search(code: str, query: str):
     URL = f"https://www.googleapis.com/youtube/v3/search?q={query}&key=AIzaSyDlCe_en2fQZrQXEyV2hmDue9396qzaGrw"
     re = req.get(URL).json()
-    item = re['items'][0]['id']['videoId']
+    
+    i = 0
+    while i < 5:
+        try:
+            item = re['items'][i]['id']['videoId']
+            break
+        except:
+            i+=1
+
     download_mp3(VIDEO_DOWNLOAD_PATH, item)
 
     room = room_dict.get(code)

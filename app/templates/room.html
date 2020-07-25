@@ -7,13 +7,27 @@
 <script>
     let now = 0;
 
-    window.onload = function () {
-        newMusic();
+    window.onload = async function () {
+        let playlist = await fetch("/room/{{code}}/playlist").then((res) => res.json())
+
+        if (playlist.length) {
+            newMusic();
+        } else {
+            timerId = setInterval(checkNew, 1000);
+        }
     }
+
+    async function checkNew() {
+        let playlist = await fetch("/room/{{code}}/playlist").then((res) => res.json())
+        if (playlist.length) {
+            clearInterval(timerId);
+            newMusic();
+        }
+    };
 
     async function newMusic() {
         let playlist = await fetch("/room/{{code}}/playlist").then((res) => res.json())
-        document.getElementById("player").src = `/static/music_files/${playlist[now]}.mp3`;
+        document.getElementById("player").src = `/static/music_files/${playlist[now % playlist.length]}.mp3`;
         now++;
     };
 
@@ -25,12 +39,14 @@
         message.appendChild(content)
         messages.appendChild(message)
     };
+
     function sendMessage(event) {
         var input = document.getElementById("messageText")
         ws.send(input.value)
         input.value = '';
         event.preventDefault();
     }
+
     function requestSong() {
         event.preventDefault()
         const keyword = document.getElementById("searchText").value
