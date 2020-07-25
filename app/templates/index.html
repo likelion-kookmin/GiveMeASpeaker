@@ -8,17 +8,28 @@
 </head>
 
 <body>
-    <form method="POST" onsubmit="createRoom()">
-        <button>만들기</button>
+    <form onsubmit="enterWaitingRoom()" action="">
+        닉네임:
+        <input type="text" name="name" id="nickname">
+        <button>입장하기</button>
     </form>
-    {% for code, info in rooms.items() %}
-    <a href="/room/{{code}}">{{code}} : {{info}}</a> <br>
-    {% endfor%}
 
     <script>
-        function createRoom() {
-            event.preventDefault()
-            fetch("/room/", {method:"POST"})
+        window.onload = () => {
+            if (localStorage.getItem("nickname") !== null) {
+                goWaitingRoom();
+            }
+        }
+
+        function enterWaitingRoom() {
+            const nickname = document.getElementById("nickname")
+            localStorage.setItem("nickname", nickname.value)
+            goWaitingRoom();
+            event.preventDefault();
+        }
+
+        function goWaitingRoom() {
+            window.location.href = window.location.origin + "/waiting-room";
         }
     </script>
 </body>

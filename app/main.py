@@ -36,12 +36,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/")
 async def homepage(request: Request):
     template = "index.html"
-    context = {"request": request,
-               "rooms": {room.room_code: str(room) for room in room_dict.values()}
-               }
+    context = {"request": request}
+    return templates.TemplateResponse(template, context)
+
+
+@app.get("/waiting-room")
+async def homepage(request: Request):
+    template = "waiting_room.html"
+    context = {
+        "request": request,
+        "rooms": {room.room_code: str(room) for room in room_dict.values()}
+    }
     return templates.TemplateResponse(template, context)
 
 
@@ -78,6 +87,10 @@ def enter_room(request: Request, code: str):
     context = {"request": request, "code": code}
     return templates.TemplateResponse(template, context)
 
+@app.get("/room/{code}/playlist")
+def playlist_room(request: Request, code: str):
+    room = room_dict[code]
+    return room.playlist
 
 @app.websocket("/chat/{code}/")
 async def chat_room(code: str, websocket: WebSocket):
@@ -89,13 +102,15 @@ async def chat_room(code: str, websocket: WebSocket):
             await room.broadcast(f"{data}")
 
 
-@app.get("/search/{query}")
-async def search(query: str):
+@app.get("/search/{code}/{query}")
+async def search(code: str, query: str):
     URL = f"https://www.googleapis.com/youtube/v3/search?q={query}&key=AIzaSyDlCe_en2fQZrQXEyV2hmDue9396qzaGrw"
     re = req.get(URL).json()
     item = re['items'][0]['id']['videoId']
     download_mp3(VIDEO_DOWNLOAD_PATH, item)
 
+    room = room_dict.get(code)
+    room.push_playlist(item)
     return f"http://127.0.0.1:8000/static/music_files/{item}.mp3"
 
 

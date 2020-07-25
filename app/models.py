@@ -45,9 +45,13 @@ class Room:
     def __init__(self, room_code):
         self.created_at = datetime.datetime.now()
         self._room_code = room_code
+        
         connections[self.room_code] = []
         self.room_connections = connections[self.room_code]
+        
         self.notifier = Notifier(self.room_connections)
+
+        self._playlist = []
 
     def __str__(self):
         return f"Room#{self.room_code}, Time:{self.duration}"
@@ -80,3 +84,10 @@ class Room:
 
     def disconnect(self, websocket: WebSocket):
         self.notifier.disconnect(websocket)
+
+    def push_playlist(self, url:str):
+        self.playlist.append(url)
+    
+    @property
+    def playlist(self):
+        return self._playlist
