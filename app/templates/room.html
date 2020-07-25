@@ -7,8 +7,10 @@
 <script>
     let now = 0;
     var nickname = localStorage.getItem("nickname");
+    var ws = new WebSocket(`ws://localhost:8000/chat/{{code}}/`);
+    
+
     window.onload = async function () {
-        sendMessage(`${nickname} 님이 입장하셨습니다.`)
         let playlist = await fetch("/room/{{code}}/playlist").then((res) => res.json())
 
         if (playlist.length) {
@@ -16,6 +18,10 @@
         } else {
             timerId = setInterval(checkNew, 3000);
         }
+
+        setTimeout(() => {
+            ws.send(`${nickname} 님이 입장하셨습니다!`);
+        }, 300)
     }
 
     async function checkNew() {
@@ -32,7 +38,6 @@
         now++;
     };
 
-    var ws = new WebSocket(`ws://localhost:8000/chat/{{code}}/`);
     ws.onmessage = function (event) {
         var messages = document.getElementById('messages')
         var message = document.createElement('li')
@@ -40,6 +45,7 @@
         message.appendChild(content)
         messages.appendChild(message)
     };
+
 
     function sendMessage(event) {
         var input = document.getElementById("messageText")
