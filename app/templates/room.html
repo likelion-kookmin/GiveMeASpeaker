@@ -8,7 +8,7 @@
     let now = 0;
     var nickname = localStorage.getItem("nickname");
     window.onload = async function () {
-
+        sendMessage(`${nickname} 님이 입장하셨습니다.`)
         let playlist = await fetch("/room/{{code}}/playlist").then((res) => res.json())
 
         if (playlist.length) {
