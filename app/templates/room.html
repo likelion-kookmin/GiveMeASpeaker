@@ -1,56 +1,73 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Chat</title>
-    </head>
-    <body>
-        <h1>WebSocket Chat</h1>
-        <form action="" onsubmit="sendMessage(event)">
-            <input type="text" id="messageText" autocomplete="off"/>
-            <button>Send</button>
-        </form>
-        <form action="" onsubmit="requestSong(event)">
-            <input type="text" id="searchText" autocomplete="off"/>
-            <button>곡 신청하기</button>
-        </form>
-        <ul id='messages'>
-        </ul>
+{% extends "base.html" %}
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-        <script>
-            let now = 0;
-            
-            window.onload = function () {
-                newMusic();
-            }
+{% block content %}
 
-            async function newMusic() {
-                let playlist = await fetch("/room/{{code}}/playlist").then((res) => res.json())
-                document.getElementById("player").src = `/static/music_files/${playlist[now]}.mp3`;
-                now++;
-            }; 
-            
-            var ws = new WebSocket(`ws://localhost:8000/chat/{{code}}/`);
-            ws.onmessage = function(event) {
-                var messages = document.getElementById('messages')
-                var message = document.createElement('li')
-                var content = document.createTextNode(event.data)
-                message.appendChild(content)
-                messages.appendChild(message)
-            };
-            function sendMessage(event) {
-                var input = document.getElementById("messageText")
-                ws.send(input.value)
-                input.value = '';
-                event.preventDefault();
-            }
-            function requestSong(){
-                event.preventDefault()
-                const keyword = document.getElementById("searchText").value
-                const roomNumber = window.location.pathname.substring(6,12)
-                fetch(window.location.origin + '/search/' + roomNumber + '/' + keyword)
-            }
-        </script>
-        <audio autoplay controls id="player" onended="newMusic()"></audio>
-    </body>
-</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+<script>
+    let now = 0;
+
+    window.onload = function () {
+        newMusic();
+    }
+
+    async function newMusic() {
+        let playlist = await fetch("/room/{{code}}/playlist").then((res) => res.json())
+        document.getElementById("player").src = `/static/music_files/${playlist[now]}.mp3`;
+        now++;
+    };
+
+    var ws = new WebSocket(`ws://localhost:8000/chat/{{code}}/`);
+    ws.onmessage = function (event) {
+        var messages = document.getElementById('messages')
+        var message = document.createElement('li')
+        var content = document.createTextNode(event.data)
+        message.appendChild(content)
+        messages.appendChild(message)
+    };
+    function sendMessage(event) {
+        var input = document.getElementById("messageText")
+        ws.send(input.value)
+        input.value = '';
+        event.preventDefault();
+    }
+    function requestSong() {
+        event.preventDefault()
+        const keyword = document.getElementById("searchText").value
+        const roomNumber = window.location.pathname.substring(6, 12)
+        fetch(window.location.origin + '/search/' + roomNumber + '/' + keyword)
+    }
+</script>
+
+<section class="hero is-primary is-fullheight">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <h1 class="title">스빌 방 목록!</h1>
+            <h2 class="subtitle">자동으로 추가되는 재생목록!</h2>
+            <h3 class="subsubtitle">친구야.. 넌 운전만 해 :D</h3>
+
+            <div class="columns is-centered">
+                <div class="column is-5">
+                    <form action="" onsubmit="sendMessage(event)">
+                        <input type="text" id="messageText" autocomplete="off" />
+                        <button>Send</button>
+                    </form>
+                    <form action="" onsubmit="requestSong(event)">
+                        <input type="text" id="searchText" autocomplete="off" />
+                        <button>곡 신청하기</button>
+                    </form>
+                    <ul id='messages'>
+                    </ul>
+                </div>
+                <audio autoplay controls id="player" onended="newMusic()"></audio>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+{% endblock %}

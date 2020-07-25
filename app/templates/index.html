@@ -14,7 +14,7 @@
                                 <input id="nickname" class="input is-primary" type="text" placeholder="이름을 입력해주세요!">
                             </div>
                         </div>
-                        <button id="enter_btn" type="submit" class="button is-primary is-light is-medium">입장하기</button>
+                        <button data-target="pageloader" id="enter_btn" type="submit" class="button is-primary is-light is-medium">입장하기</button>
                     </div>
                 </div>
             </div>
@@ -31,6 +31,7 @@
             let nickname = document.getElementById("nickname");
             enter_btn.addEventListener("click", (event) => {
                 if(nickname.value){
+                    enter_btn
                     console.log(nickname.value + " 님 환영합니다!!");
                     enterWaitingRoom(nickname.value);
                 } else {

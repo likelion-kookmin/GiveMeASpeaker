@@ -1,28 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block content %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+<section class="hero is-primary is-fullheight">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <div class="columns is-centered">
+                <div class="column">
+                    <h1 class="title">스빌 방 목록!</h1>
+                    <h2 class="subtitle">환영합니다!</h2>
+                    <div class="columns">
+                        <div class="column is-6">
+                            <form method="POST" onsubmit="createRoom()">
+                                <button class="button is-primary is-light is-large">방 만들기</button>
+                            </form>
+                        </div>
+                        <div class="column is-6">
+                            <div class="field has-addons">
+                                <div class="control">
+                                    <input id="joinRoom" class="input is-primary is-large" type="text" placeholder="참가번호">
+                                </div>
+                                <div class="control">
+                                    <a id="joinBtn" class="button is-primary is-large is-light">
+                                        방 참가하기
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+</section>
 
-<body>
-    <h1></h1>
-    <form method="POST" onsubmit="createRoom()">
-        <button>만들기</button>
-    </form>
-    {% for code, info in rooms.items() %}
-    <a href="/room/{{code}}">{{code}} : {{info}}</a> <br>
-    {% endfor%}
+<script>
+    window.onload = () => {
+        let nickname = localStorage.getItem("nickname");
+        document.querySelector(".subtitle").innerText = `환영합니다! ${nickname} 님!!`
 
-    <script>
-        function createRoom() {
-            event.preventDefault();
-            fetch("/room/", {method:"POST"});
-            window.location.reload();
-        }
-    </script>
-</body>
+        var joinBtn = document.querySelector("#joinBtn");
+        var joinRoom = document.querySelector("#joinRoom");
+        joinBtn.addEventListener("click", () => {
+            joinRoomFn(joinRoom.value);
+        })
+    }
 
-</html>
+    async function createRoom() {
+        event.preventDefault();
+        let room_code = await fetch("/room/", { method: "POST" }).then(res => res.json());
+        window.location.href = window.location.origin + `/room/${room_code.code}`
+    }
+
+    function joinRoomFn(room_code) {
+        window.location.href = window.location.origin + `/room/${room_code}`
+    }
+</script>
+{% endblock %}
