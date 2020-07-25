@@ -28,10 +28,12 @@
         if (playlist.length) {
             clearInterval(timerId);
             newMusic();
+            now = 0;
         }
     };
 
     async function newMusic() {
+        console.log(now);
         let playlist = await fetch("/room/{{code}}/playlist").then((res) => res.json())
         document.getElementById("player").src = `/static/music_files/${playlist[now % playlist.length]}.mp3`;
         now++;
