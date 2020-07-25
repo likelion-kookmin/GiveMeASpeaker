@@ -15,7 +15,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.models import Room
 
-app = FastAPI()
+app = FastAPI(
+    openapi_url='/openapi.json',
+    docs_url='/docs',
+    redoc_url='/docs/redoc'
+)
 VIDEO_DOWNLOAD_PATH = './static/music_files'  # 다운로드 경로
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
@@ -87,11 +91,13 @@ def enter_room(request: Request, code: str):
     context = {"request": request, "code": code}
     return templates.TemplateResponse(template, context)
 
+
 @app.get("/room/{code}/playlist")
 def playlist_room(request: Request, code: str):
     room = room_dict[code]
     print(room.playlist)
     return room.playlist
+
 
 @app.websocket("/chat/{code}/")
 async def chat_room(code: str, websocket: WebSocket):
@@ -107,14 +113,14 @@ async def chat_room(code: str, websocket: WebSocket):
 async def search(code: str, query: str):
     URL = f"https://www.googleapis.com/youtube/v3/search?q={query}&key=AIzaSyDlCe_en2fQZrQXEyV2hmDue9396qzaGrw"
     re = req.get(URL).json()
-    
+
     i = 0
     while i < 5:
         try:
             item = re['items'][i]['id']['videoId']
             break
         except:
-            i+=1
+            i += 1
 
     download_mp3(VIDEO_DOWNLOAD_PATH, item)
 
