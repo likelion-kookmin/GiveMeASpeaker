@@ -6,14 +6,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 <script>
     let now = 0;
-
+    var nickname = localStorage.getItem("nickname");
     window.onload = async function () {
+
         let playlist = await fetch("/room/{{code}}/playlist").then((res) => res.json())
 
         if (playlist.length) {
             newMusic();
         } else {
-            timerId = setInterval(checkNew, 1000);
+            timerId = setInterval(checkNew, 3000);
         }
     }
 
@@ -42,7 +43,8 @@
 
     function sendMessage(event) {
         var input = document.getElementById("messageText")
-        ws.send(input.value)
+        var msg = nickname + " : " + input.value;
+        ws.send(msg);
         input.value = '';
         event.preventDefault();
     }
@@ -58,25 +60,40 @@
 <section class="hero is-primary is-fullheight">
     <div class="hero-body">
         <div class="container has-text-centered">
-            <h1 class="title">스빌 방 목록!</h1>
+            <h1 class="title">{{code}}</h1>
             <h2 class="subtitle">자동으로 추가되는 재생목록!</h2>
             <h3 class="subsubtitle">친구야.. 넌 운전만 해 :D</h3>
 
             <div class="columns is-centered">
                 <div class="column is-5">
                     <form action="" onsubmit="sendMessage(event)">
-                        <input type="text" id="messageText" autocomplete="off" />
-                        <button>Send</button>
+                        <div class="columns">
+                            <div class="column is-8">
+                                <input type="text" id="messageText" class="input" autocomplete="off"
+                                    placeholder="채팅하기" />
+                            </div>
+                            <div class="column is-1">
+                                <button class="button is-primary is-light">채팅하기</button>
+                            </div>
+                        </div>
                     </form>
                     <form action="" onsubmit="requestSong(event)">
-                        <input type="text" id="searchText" autocomplete="off" />
-                        <button>곡 신청하기</button>
+                        <div class="columns">
+                            <div class="column is-8">
+                                <input type="text" id="searchText" class="input" autocomplete="off"
+                                    placeholder="신청할 곡 이름" />
+                            </div>
+                            <div class="column is-1">
+                                <button class="button is-primary is-light">곡 신청하기</button>
+                            </div>
+                        </div>
                     </form>
-                    <ul id='messages'>
-                    </ul>
                 </div>
                 <audio autoplay controls id="player" onended="newMusic()"></audio>
-
+            </div>
+            <div style="height: 500px; background-color: #ebfffc; color: #00947e">
+                <ul id='messages'>
+                </ul>
             </div>
         </div>
     </div>

@@ -6,7 +6,7 @@
         <div class="container has-text-centered">
             <div class="columns is-centered">
                 <div class="column">
-                    <h1 class="title">스빌 방 목록!</h1>
+                    <h1 class="title">빌려줄까? 빌릴까?</h1>
                     <h2 class="subtitle">환영합니다!</h2>
                     <div class="columns">
                         <div class="column is-6">
@@ -15,14 +15,15 @@
                             </form>
                         </div>
                         <div class="column is-6">
-                            <div class="field has-addons">
-                                <div class="control">
-                                    <input id="joinRoom" class="input is-primary is-large" type="text" placeholder="참가번호">
+                            <div class="columns">
+                                <div class="column is-5">
+                                    <input id="joinRoom" class="input is-primary is-large" type="text"
+                                        placeholder="참가번호">
                                 </div>
-                                <div class="control">
-                                    <a id="joinBtn" class="button is-primary is-large is-light">
+                                <div class="column is-1">
+                                    <button id="joinBtn" class="button is-primary is-large is-light">
                                         방 참가하기
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -30,8 +31,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    </div>
     </div>
 </section>
 
@@ -45,6 +44,7 @@
         joinBtn.addEventListener("click", () => {
             joinRoomFn(joinRoom.value);
         })
+        alert(`환영합니다 ${nickname} 님`)
     }
 
     async function createRoom() {
