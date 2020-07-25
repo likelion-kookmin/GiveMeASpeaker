@@ -28,6 +28,12 @@
                 input.value = ''
                 event.preventDefault()
             }
+            fetch("")
+            function newMusic() {
+                let response = await fetch('/search/{{code}}/');
+                document.getElementById("player").src = "http://127.0.0.1:8000/static/music_files/jeqdYqsrsA0.mp3";
+            }; 
         </script>
+        <audio autoplay controls id="player" src="http://127.0.0.1:8000/static/music_files/UuV2BmJ1p_I.mp3" onended="newMusic()"></audio>
     </body>
 </html>
