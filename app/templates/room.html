@@ -1,49 +1,56 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <title>Chat</title>
+    </head>
+    <body>
+        <h1>WebSocket Chat</h1>
+        <form action="" onsubmit="sendMessage(event)">
+            <input type="text" id="messageText" autocomplete="off"/>
+            <button>Send</button>
+        </form>
+        <form action="" onsubmit="requestSong(event)">
+            <input type="text" id="searchText" autocomplete="off"/>
+            <button>곡 신청하기</button>
+        </form>
+        <ul id='messages'>
+        </ul>
 
-<head>
-    <title>Chat</title>
-</head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+        <script>
+            let now = 0;
+            
+            window.onload = function () {
+                newMusic();
+            }
 
-<body>
-    <h1>WebSocket Chat</h1>
-    <form action="" onsubmit="sendMessage(event)">
-        <input type="text" id="messageText" autocomplete="off" />
-        <button>Send</button>
-    </form>
-    <ul id='messages'>
-    </ul>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-    <script>
-        let now = 0;
-        window.onload = function () {
-            newMusic();
-        }
-
-        var ws = new WebSocket(`ws://localhost:8000/chat/{{code}}/`);
-        ws.onmessage = function (event) {
-            var messages = document.getElementById('messages')
-            var message = document.createElement('li')
-            var content = document.createTextNode(event.data)
-            message.appendChild(content)
-            messages.appendChild(message)
-        };
-        
-        function sendMessage(event) {
-            var input = document.getElementById("messageText")
-            ws.send(input.value)
-            input.value = '';
-            event.preventDefault();
-        }
-
-        async function newMusic() {
-            let playlist = await fetch("/room/{{code}}/playlist").then((res) => res.json())
-            document.getElementById("player").src = `/static/music_files/${playlist[now]}.mp3`;
-            now++;
-        }; 
-    </script>
-    <audio autoplay controls id="player" onended="newMusic()"></audio>
-</body>
-
+            async function newMusic() {
+                let playlist = await fetch("/room/{{code}}/playlist").then((res) => res.json())
+                document.getElementById("player").src = `/static/music_files/${playlist[now]}.mp3`;
+                now++;
+            }; 
+            
+            var ws = new WebSocket(`ws://localhost:8000/chat/{{code}}/`);
+            ws.onmessage = function(event) {
+                var messages = document.getElementById('messages')
+                var message = document.createElement('li')
+                var content = document.createTextNode(event.data)
+                message.appendChild(content)
+                messages.appendChild(message)
+            };
+            function sendMessage(event) {
+                var input = document.getElementById("messageText")
+                ws.send(input.value)
+                input.value = '';
+                event.preventDefault();
+            }
+            function requestSong(){
+                event.preventDefault()
+                const keyword = document.getElementById("searchText").value
+                const roomNumber = window.location.pathname.substring(6,12)
+                fetch(window.location.origin + '/search/' + roomNumber + '/' + keyword)
+            }
+        </script>
+        <audio autoplay controls id="player" onended="newMusic()"></audio>
+    </body>
 </html>
