@@ -9,6 +9,10 @@
             <input type="text" id="messageText" autocomplete="off"/>
             <button>Send</button>
         </form>
+        <form action="" onsubmit="requestSong(event)">
+            <input type="text" id="searchText" autocomplete="off"/>
+            <button>곡 신청하기</button>
+        </form>
         <ul id='messages'>
         </ul>
 
@@ -28,6 +32,14 @@
                 input.value = '';
                 event.preventDefault();
             }
+            function requestSong(){
+                event.preventDefault()
+                const keyword = document.getElementById("searchText")
+                const roomNumber = window.location.pathname.substring(6,12)
+                console.log(window.location.origin + '/search/' + roomNumber + '/' + keyword)
+                fetch(window.location.origin + '/search/' + roomNumber + '/' + keyword)
+            }
+
         </script>
     </body>
 </html>
