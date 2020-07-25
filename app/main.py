@@ -90,6 +90,7 @@ def enter_room(request: Request, code: str):
 @app.get("/room/{code}/playlist")
 def playlist_room(request: Request, code: str):
     room = room_dict[code]
+    print(room.playlist)
     return room.playlist
 
 @app.websocket("/chat/{code}/")
