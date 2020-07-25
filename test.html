@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        var vid = document.getElementById("a");
+
+        // vid.onended = function () {
+        //     alert("The video has ended");
+        // };
+        function myFunction() {document.getElementById("a").src = "B.mp3";}; 
+    </script>
+</head>
+
+<body>
+    <audio autoplay controls id="a" src="A.mp3" onended="myFunction()"></audio>
+</body>
+
+</html>
