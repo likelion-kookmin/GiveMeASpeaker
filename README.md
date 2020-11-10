@@ -9,10 +9,19 @@
 공유 플레이리스트, 라디오 서비스
 
 # 기능
+
+## 처음 화면 - 닉네임 설정
++ 채팅에 사용되는 닉네임 설정
 ![Main](./Docs/IMAGES/main.png)
 
+## 방생성, 방참가
++ 방을 생성하거나 이미 생성된 방에 입장
 ![Waiting-Room](./Docs/IMAGES/waiting-room.png)
 
+## 방
++ 방에 접속시 방에 현재 설정된 플레이리스트에 맞게 음원재생
++ 방에 있는 사람들과 채팅
++ 플레이리스트에 음원이름을 입력하여 추가
 ![Room](./Docs/IMAGES/inroom.png)
 
 ![Room](./Docs/IMAGES/twin.png)
